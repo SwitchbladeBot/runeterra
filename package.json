@@ -2,7 +2,7 @@
   "name": "runeterra",
   "version": "0.0.1",
   "description": "Legends of Runeterra deck code encoder/decoder",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/SwitchbladeBot/runeterra/issues"
   },
-  "homepage": "https://github.com/SwitchbladeBot/runeterra#readme"
+  "homepage": "https://github.com/SwitchbladeBot/runeterra#readme",
+  "devDependencies": {
+    "standard": "^14.3.1"
+  }
 }
