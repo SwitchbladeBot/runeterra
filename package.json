@@ -1,0 +1,27 @@
+{
+  "name": "runeterra",
+  "version": "0.0.1",
+  "description": "Legends of Runeterra deck code encoder/decoder",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SwitchbladeBot/runeterra.git"
+  },
+  "keywords": [
+    "legends-of-runeterra",
+    "runeterra",
+    "league-of-legends",
+    "riot-games",
+    "riot",
+    "lol"
+  ],
+  "author": "Switchblade Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SwitchbladeBot/runeterra/issues"
+  },
+  "homepage": "https://github.com/SwitchbladeBot/runeterra#readme"
+}
