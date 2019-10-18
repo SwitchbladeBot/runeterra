@@ -46,8 +46,12 @@ const deck = DeckEncoder.decode('CEAAECABAQJRWHBIFU2DOOYIAEBAMCIMCINCILJZAICACBA
   Card { code: '01IO043', count: 1 } ]
 */
 
-deck[0].faction
-// Faction { id: 4, shortCode: "PZ" }
+// Card
+deck[0].code    // "01PZ019"
+deck[0].count   // 2
+deck[0].set     // 1
+deck[0].id      // 19
+deck[0].faction // Faction { id: 4, shortCode: "PZ" }
 
 const code = DeckEncoder.encode(deck)
 // CEAAECABAQJRWHBIFU2DOOYIAEBAMCIMCINCILJZAICACBANE4VCYBABAILR2HRL
