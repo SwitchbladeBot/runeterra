@@ -1,6 +1,6 @@
 {
   "name": "runeterra",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Legends of Runeterra deck code encoder/decoder",
   "main": "src/index.js",
   "scripts": {
