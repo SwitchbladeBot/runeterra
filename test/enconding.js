@@ -1,13 +1,14 @@
 const fs = require('fs')
 const assert = require('assert')
+const { EOL } = require('os')
 const { DeckEncoder, Card } = require('../')
 
 describe('Encoding/Decoding', () => {
   it('should decode recommended decks', () => {
     const deckCodesTestData = fs.readFileSync('./test/deckCodesTestData.txt', { encoding: 'utf-8' })
-    const codeBlocks = deckCodesTestData.split('\r\n\r\n')
+    const codeBlocks = deckCodesTestData.split(EOL + EOL)
     const decks = codeBlocks.reduce((d, b) => {
-      const [code, ...list] = b.split('\r\n')
+      const [code, ...list] = b.split(EOL)
       d[code] = list.map(c => Card.fromCardString(c))
       return d
     }, {})
