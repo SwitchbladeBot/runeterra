@@ -15,28 +15,26 @@ class DeckEncoder {
     }
 
     const firstByte = bytes.shift()
-    let format = firstByte >>> 4
-    let version = firstByte & 0xF
-    
+    const version = firstByte & 0xF
 
     if (version > DeckEncoder.MAX_KNOWN_VERSION) {
       throw new Error('The provided code requires a higher version of this library; please update.')
     }
 
     for (let i = 3; i > 0; i--) {
-      let numGroupOfs = VarInt.pop(bytes)
+      const numGroupOfs = VarInt.pop(bytes)
 
       for (let j = 0; j < numGroupOfs; j++) {
-        let numOfsInThisGroup = VarInt.pop(bytes)
-        let set = VarInt.pop(bytes)
-        let faction = VarInt.pop(bytes)
+        const numOfsInThisGroup = VarInt.pop(bytes)
+        const set = VarInt.pop(bytes)
+        const faction = VarInt.pop(bytes)
 
         for (let k = 0; k < numOfsInThisGroup; k++) {
-          let card = VarInt.pop(bytes)
+          const card = VarInt.pop(bytes)
 
-          let setString = set.toString().padStart(2, '0')
-          let factionString = Faction.fromID(faction).shortCode
-          let cardString = card.toString().padStart(3, '0')
+          const setString = set.toString().padStart(2, '0')
+          const factionString = Faction.fromID(faction).shortCode
+          const cardString = card.toString().padStart(3, '0')
 
           result.push(Card.from(setString, factionString, cardString, i))
         }
@@ -44,14 +42,14 @@ class DeckEncoder {
     }
 
     while (bytes.length > 0) {
-      let fourPlusCount = VarInt.pop(bytes)
-      let fourPlusSet = VarInt.pop(bytes)
-      let fourPlusFaction = VarInt.pop(bytes)
-      let fourPlusNumber = VarInt.pop(bytes)
+      const fourPlusCount = VarInt.pop(bytes)
+      const fourPlusSet = VarInt.pop(bytes)
+      const fourPlusFaction = VarInt.pop(bytes)
+      const fourPlusNumber = VarInt.pop(bytes)
 
-      let fourPlusSetString = fourPlusSet.toString().padStart(2, '0')
-      let fourPlusFactionString = Faction.fromID(fourPlusFaction).shortCode
-      let fourPlusNumberString = fourPlusNumber.toString().padStart(3, '0')
+      const fourPlusSetString = fourPlusSet.toString().padStart(2, '0')
+      const fourPlusFactionString = Faction.fromID(fourPlusFaction).shortCode
+      const fourPlusNumberString = fourPlusNumber.toString().padStart(3, '0')
 
       result.push(Card.from(fourPlusSetString, fourPlusFactionString, fourPlusNumberString, fourPlusCount))
     }
@@ -97,7 +95,7 @@ class DeckEncoder {
       result.push(...VarInt.get(first.set))
       result.push(...VarInt.get(first.faction.id))
 
-      for (let card of list) {
+      for (const card of list) {
         result.push(...VarInt.get(card.id))
       }
 

@@ -5,7 +5,7 @@ class VarInt {
     let bytesPopped = 0
     for (let i = 0; i < bytes.length; i++) {
       bytesPopped++
-      let current = bytes[i] & VarInt.AllButMSB
+      const current = bytes[i] & VarInt.AllButMSB
       result |= current << currentShift
 
       if ((bytes[i] & VarInt.JustMSB) !== VarInt.JustMSB) {
@@ -20,7 +20,7 @@ class VarInt {
   }
 
   static get (value) {
-    let buff = new Array(10)
+    const buff = new Array(10)
     buff.fill(0)
 
     let currentIndex = 0

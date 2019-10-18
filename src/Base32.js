@@ -37,7 +37,7 @@ class Base32 {
     let buffer = 0
     let next = 0
     let bitsLeft = 0
-    for (let c of encoded.split('')) {
+    for (const c of encoded.split('')) {
       if (typeof Base32.CHAR_MAP[c] === 'undefined') {
         throw new DecodingError('Illegal character: ' + c)
       }
@@ -56,10 +56,10 @@ class Base32 {
 
   static encode (data, padOutput = false) {
     if (data.length === 0) return ''
-    if (data.length >= (1 << 28)) throw new RangeError("Array is too long for this")
+    if (data.length >= (1 << 28)) throw new RangeError('Array is too long for this')
 
-    let outputLength = Math.floor((data.length * 8 + Base32.SHIFT - 1) / Base32.SHIFT)
-    let result = new Array(outputLength)
+    const outputLength = Math.floor((data.length * 8 + Base32.SHIFT - 1) / Base32.SHIFT)
+    const result = new Array(outputLength)
 
     let buffer = data[0]
     let next = 1
@@ -71,23 +71,22 @@ class Base32 {
           buffer |= (data[next++] & 0xff)
           bitsLeft += 8
         } else {
-          let pad = Base32.SHIFT - bitsLeft
+          const pad = Base32.SHIFT - bitsLeft
           buffer <<= pad
           bitsLeft += pad
         }
       }
-      let index = Base32.MASK & (buffer >> (bitsLeft - Base32.SHIFT))
+      const index = Base32.MASK & (buffer >> (bitsLeft - Base32.SHIFT))
       bitsLeft -= Base32.SHIFT
       result.push(Base32.DIGITS[index])
     }
     if (padOutput) {
-      let padding = 8 - (result.length % 8)
-      if (padding > 0) result.push("=".repeat(padding === 8 ? 0 : padding))
+      const padding = 8 - (result.length % 8)
+      if (padding > 0) result.push('='.repeat(padding === 8 ? 0 : padding))
     }
     return result.join('')
   }
 }
-
 
 Base32.DIGITS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'.split('')
 Base32.MASK = Base32.DIGITS.length - 1
