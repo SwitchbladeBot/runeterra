@@ -5,6 +5,7 @@ class Faction {
   }
 
   static fromCode (code) {
+    if (!Faction.FACTIONS.includes(code)) throw new TypeError('Invalid faction code!')
     return new this(code, this.FACTIONS.indexOf(code))
   }
 

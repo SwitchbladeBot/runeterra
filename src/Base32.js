@@ -39,7 +39,7 @@ class Base32 {
     let bitsLeft = 0
     for (const c of encoded.split('')) {
       if (typeof Base32.CHAR_MAP[c] === 'undefined') {
-        throw new DecodingError('Illegal character: ' + c)
+        throw new TypeError('Illegal character: ' + c)
       }
 
       buffer <<= Base32.SHIFT
@@ -96,7 +96,5 @@ Base32.CHAR_MAP = Base32.DIGITS.reduce((m, d, i) => {
   return m
 }, {})
 Base32.SEPARATOR = '-'
-
-class DecodingError extends Error {}
 
 module.exports = Base32

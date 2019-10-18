@@ -16,7 +16,7 @@ class VarInt {
       currentShift += 7
     }
 
-    throw new Error('Byte array did not contain valid varints.')
+    throw new TypeError('Byte array did not contain valid varints.')
   }
 
   static get (value) {
