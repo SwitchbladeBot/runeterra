@@ -1,9 +1,9 @@
-name: Test
+name: Tests
 
 on: [push]
 
 jobs:
-  test:
+  npm-test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
