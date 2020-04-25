@@ -29,6 +29,18 @@ describe('Encoding/Decoding', () => {
     assert.deepStrictEqual(deck, decoded)
   })
 
+  it('should decode decks with bilgewater cards', () => {
+    const deck = [
+      Card.fromCardString('4:01DE002'),
+      Card.fromCardString('2:02BW003'),
+      Card.fromCardString('3:02BW010'),
+      Card.fromCardString('5:01DE004'),
+    ]
+    const code = DeckEncoder.encode(deck)
+    const decoded = DeckEncoder.decode(code)
+    assert.deepStrictEqual(deck, decoded)
+  })
+
   it('should decode large decks', () => {
     const deck = [
       Card.fromCardString('3:01DE002'),

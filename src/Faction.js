@@ -14,6 +14,6 @@ class Faction {
   }
 }
 
-Faction.FACTIONS = ['DE', 'FR', 'IO', 'NX', 'PZ', 'SI']
+Faction.FACTIONS = ['DE', 'FR', 'IO', 'NX', 'PZ', 'SI', 'BW']
 
 module.exports = Faction
