@@ -1,20 +1,26 @@
-name: Node.js Package
+name: Publish
 
 on:
   release:
-    types: [created]
+    types: [ created ]
 
 jobs:
-  publish-npm:
+  npm:
+    name: Publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+        name: Checkout Code
       - uses: actions/setup-node@v1
+        name: Setup Node
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
       - run: npm install
+        name: Install dependencies
       - run: npm test
+        name: Run tests
       - run: npm publish
+        name: Publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

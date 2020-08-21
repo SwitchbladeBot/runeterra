@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  checkversion:
+    name: Release if needed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: MontyD/package-json-updated-action@1.0.1
+        name: Version Changed?
+        id: version-updated
+        with:
+          path: package.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - if: steps.version-updated.outputs.has-updated
+        name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          tag_name: ${{ steps.version-updated.outputs.current-package-version }}
+          release_name: ${{ steps.version-updated.outputs.current-package-version }}
+          prerelease: ${{ startsWith(steps.version-updated.outputs.current-package-version, '0.') }}
