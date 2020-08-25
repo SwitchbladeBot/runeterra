@@ -5,7 +5,7 @@ class Faction {
   }
 
   static fromCode (code) {
-    if (!Faction.FACTIONS.includes(code)) throw new TypeError('Invalid faction code!')
+    if (!Faction.FACTIONS.includes(code) || code === null) throw new TypeError('Invalid faction code!')
     return new this(code, this.FACTIONS.indexOf(code))
   }
 
@@ -14,6 +14,6 @@ class Faction {
   }
 }
 
-Faction.FACTIONS = ['DE', 'FR', 'IO', 'NX', 'PZ', 'SI', 'BW', 'MT']
+Faction.FACTIONS = ['DE', 'FR', 'IO', 'NX', 'PZ', 'SI', 'BW', null, null, 'MT']
 
 module.exports = Faction
