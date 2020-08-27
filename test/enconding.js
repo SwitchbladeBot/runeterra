@@ -41,6 +41,18 @@ describe('Encoding/Decoding', () => {
     assert.deepStrictEqual(deck, decoded)
   })
 
+  it('should decode decks with mount targon cards', () => {
+    const deck = [
+      Card.fromCardString('3:03MT010'),
+      Card.fromCardString('2:03MT003'),
+      Card.fromCardString('4:01DE002'),
+      Card.fromCardString('5:02BW004')
+    ]
+    const code = DeckEncoder.encode(deck)
+    const decoded = DeckEncoder.decode(code)
+    assert.deepStrictEqual(deck, decoded)
+  })
+
   it('should decode large decks', () => {
     const deck = [
       Card.fromCardString('3:01DE002'),
