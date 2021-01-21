@@ -21,7 +21,8 @@ class DeckEncoder {
       throw new TypeError('The provided code requires a higher version of this library; please update.')
     }
 
-    for (let i = 3; i > 0; i--) {
+    // first encoded cards are grouped by 3, 2, 1 pieces
+    DeckEncoder.GROUPS.forEach(i => {
       const numGroupOfs = VarInt.pop(bytes)
 
       for (let j = 0; j < numGroupOfs; j++) {
@@ -39,7 +40,7 @@ class DeckEncoder {
           result.push(Card.from(setString, factionString, cardString, i))
         }
       }
-    }
+    })
 
     while (bytes.length > 0) {
       const fourPlusCount = VarInt.pop(bytes)
@@ -62,46 +63,37 @@ class DeckEncoder {
       throw new TypeError('The deck provided contains invalid card codes')
     }
 
-    const grouped3 = this.groupByFactionAndSetSorted(cards.filter(c => c.count === 3))
-    const grouped2 = this.groupByFactionAndSetSorted(cards.filter(c => c.count === 2))
-    const grouped1 = this.groupByFactionAndSetSorted(cards.filter(c => c.count === 1))
-    const nOfs = cards.filter(c => c.count > 3)
-
+    const grouped = DeckEncoder.GROUPS.map(i => this.groupByFactionAndSetSorted(cards.filter(c => c.count === i)))
     return Base32.encode([
       0x11,
-      ...this.encodeGroup(grouped3),
-      ...this.encodeGroup(grouped2),
-      ...this.encodeGroup(grouped1),
-      ...this.encodeNofs(nOfs)
+      ...grouped.map(group => this.encodeGroup(group)).reduce((prev, group) => [...prev, ...group], []),
+      ...this.encodeNofs(cards.filter(c => c.count > DeckEncoder.GROUPS[0]))
     ])
   }
 
   static encodeNofs (nOfs) {
     return nOfs
       .sort((a, b) => a.code.localeCompare(b.code))
-      .reduce((result, card) => {
-        result.push(...VarInt.get(card.count))
-        result.push(...VarInt.get(card.set))
-        result.push(...VarInt.get(card.faction.id))
-        result.push(...VarInt.get(card.id))
-        return result
-      }, [])
+      .reduce((prev, card) => [
+        ...prev,
+        ...VarInt.get(card.count),
+        ...VarInt.get(card.set),
+        ...VarInt.get(card.faction.id),
+        ...VarInt.get(card.id)
+      ], [])
   }
 
   static encodeGroup (group) {
-    return group.reduce((result, list) => {
-      result.push(...VarInt.get(list.length))
-
-      const first = list[0]
-      result.push(...VarInt.get(first.set))
-      result.push(...VarInt.get(first.faction.id))
-
-      for (const card of list) {
-        result.push(...VarInt.get(card.id))
-      }
-
-      return result
-    }, VarInt.get(group.length))
+    return group.reduce(
+      (prev, list) => [
+        ...prev,
+        ...VarInt.get(list.length),
+        ...VarInt.get(list[0].set),
+        ...VarInt.get(list[0].faction.id),
+        ...list.map(card => VarInt.get(card.id)).reduce((prev, group) => [...prev, ...group], [])
+      ],
+      VarInt.get(group.length)
+    )
   }
 
   static isValidDeck (cards) {
@@ -139,5 +131,6 @@ class DeckEncoder {
 }
 
 DeckEncoder.MAX_KNOWN_VERSION = 3
+DeckEncoder.GROUPS = [3, 2, 1]
 
 module.exports = DeckEncoder
