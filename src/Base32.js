@@ -26,9 +26,7 @@ class Base32 {
   }
 
   static decode (encoded) {
-    encoded = encoded.trim().replace(Base32.SEPARATOR, '')
-    encoded = encoded.replace(/[=]*$/, '')
-    encoded = encoded.toUpperCase()
+    encoded = encoded.trim().replace(Base32.SEPARATOR, '').replace(/[=]*$/, '').toUpperCase()
 
     if (encoded.length === 0) return [0]
     const encodedLength = encoded.length
@@ -91,10 +89,7 @@ class Base32 {
 Base32.DIGITS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'.split('')
 Base32.MASK = Base32.DIGITS.length - 1
 Base32.SHIFT = Base32.numberOfTrailingZeros(Base32.DIGITS.length)
-Base32.CHAR_MAP = Base32.DIGITS.reduce((m, d, i) => {
-  m[d.toString()] = i
-  return m
-}, {})
+Base32.CHAR_MAP = Object.assign(...Base32.DIGITS.map((d, i) => ({ [d]: i })))
 Base32.SEPARATOR = '-'
 
 module.exports = Base32
