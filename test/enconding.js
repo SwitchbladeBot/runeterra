@@ -53,6 +53,18 @@ describe('Encoding/Decoding', () => {
     assert.deepStrictEqual(deck, decoded)
   })
 
+  it('should decode decks with shurima cards', () => {
+    const deck = [
+      Card.fromCardString('3:04SH010'),
+      Card.fromCardString('2:04SH003'),
+      Card.fromCardString('4:02DE002'),
+      Card.fromCardString('5:03BW004')
+    ]
+    const code = DeckEncoder.encode(deck)
+    const decoded = DeckEncoder.decode(code)
+    assert.deepStrictEqual(deck, decoded)
+  })
+
   it('should decode large decks', () => {
     const deck = [
       Card.fromCardString('3:01DE002'),
