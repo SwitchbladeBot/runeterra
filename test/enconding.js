@@ -1,29 +1,37 @@
 const fs = require('fs')
 const assert = require('assert')
-const { EOL } = require('os')
 const { DeckEncoder, Card } = require('../')
 
 describe('Encoding/Decoding', () => {
-  it('should decode recommended decks', () => {
-    const deckCodesTestData = fs.readFileSync('./test/deckCodesTestData.txt', { encoding: 'utf-8' })
-    const codeBlocks = deckCodesTestData.split(EOL + EOL)
-    const decks = codeBlocks.reduce((d, b) => {
-      const [code, ...list] = b.split(EOL)
-      d[code] = list.map(c => Card.fromCardString(c))
-      return d
-    }, {})
+  describe('full deck codes from file', () => {
+    let deckCodesTestData
 
-    const decoded = Object.keys(decks).map(k => DeckEncoder.decode(k)).reduce((d, deck) => {
-      const code = DeckEncoder.encode(deck)
-      d[code] = deck
-      return d
-    }, {})
+    before(() => {
+      deckCodesTestData = JSON.parse(fs.readFileSync('./test/deckCodesTestData.json', { encoding: 'utf-8' }))
+    })
 
-    assert.deepStrictEqual(decks, decoded)
+    it('should encode correct codes', () => {
+      const testCodes = deckCodesTestData.map(({ code }) => code)
+      const encodedCodes = deckCodesTestData.map(({ cards }) => DeckEncoder.encode(cards.map(c => Card.fromCardString(c))))
+
+      assert.deepStrictEqual(testCodes, encodedCodes)
+    })
+
+    it('should decode recommended decks', () => {
+      const decks = deckCodesTestData
+        .map(({ code, cards }) => [code, cards.map(c => Card.fromCardString(c))])
+
+      const decoded = deckCodesTestData
+        .map(({ code }) => !code ? code : DeckEncoder.decode(code))
+        .map(list => [DeckEncoder.encode(list), list])
+
+      assert.deepStrictEqual(decks, decoded)
+    })
   })
 
   it('should decode small decks', () => {
     const deck = [Card.fromCardString('1:01DE002')]
+
     const code = DeckEncoder.encode(deck)
     const decoded = DeckEncoder.decode(code)
     assert.deepStrictEqual(deck, decoded)
@@ -36,6 +44,7 @@ describe('Encoding/Decoding', () => {
       Card.fromCardString('4:01DE002'),
       Card.fromCardString('5:01DE004')
     ]
+
     const code = DeckEncoder.encode(deck)
     const decoded = DeckEncoder.decode(code)
     assert.deepStrictEqual(deck, decoded)
@@ -48,6 +57,7 @@ describe('Encoding/Decoding', () => {
       Card.fromCardString('4:01DE002'),
       Card.fromCardString('5:02BW004')
     ]
+
     const code = DeckEncoder.encode(deck)
     const decoded = DeckEncoder.decode(code)
     assert.deepStrictEqual(deck, decoded)
@@ -60,6 +70,20 @@ describe('Encoding/Decoding', () => {
       Card.fromCardString('4:02DE002'),
       Card.fromCardString('5:03BW004')
     ]
+
+    const code = DeckEncoder.encode(deck)
+    const decoded = DeckEncoder.decode(code)
+    assert.deepStrictEqual(deck, decoded)
+  })
+
+  it('should decode decks with bandle city cards', () => {
+    const deck = [
+      Card.fromCardString('3:05BC009'),
+      Card.fromCardString('3:04SH003'),
+      Card.fromCardString('3:02DE002'),
+      Card.fromCardString('3:03BW004')
+    ]
+
     const code = DeckEncoder.encode(deck)
     const decoded = DeckEncoder.decode(code)
     assert.deepStrictEqual(deck, decoded)
@@ -219,69 +243,31 @@ describe('Encoding/Decoding', () => {
 
   it('should fail over bad codes', () => {
     let deck = [Card.fromCardString('1:01DE02')]
-    try {
-      DeckEncoder.encode(deck)
-      assert.fail()
-    } catch (e) {
-      if (!(e instanceof TypeError)) assert.fail()
-    }
+    assert.throws(() => DeckEncoder.encode(deck), TypeError)
 
     deck = [Card.fromCardString('1:01XX002')]
-    try {
-      DeckEncoder.encode(deck)
-      assert.fail()
-    } catch (e) {
-      if (!(e instanceof TypeError)) assert.fail()
-    }
+    assert.throws(() => DeckEncoder.encode(deck), TypeError)
 
     deck = [Card.fromCardString('0:01DE002')]
-    try {
-      DeckEncoder.encode(deck)
-      assert.fail()
-    } catch (e) {
-      if (!(e instanceof TypeError)) assert.fail()
-    }
+    assert.throws(() => DeckEncoder.encode(deck), TypeError)
   })
 
   it('should fail over bad card counts', () => {
     let deck = [Card.fromCardString('0:01DE002')]
-    try {
-      DeckEncoder.encode(deck)
-      assert.fail()
-    } catch (e) {
-      if (!(e instanceof TypeError)) assert.fail()
-    }
+    assert.throws(() => DeckEncoder.encode(deck), TypeError)
 
     deck = [Card.fromCardString('-1:01DE002')]
-    try {
-      DeckEncoder.encode(deck)
-      assert.fail()
-    } catch (e) {
-      if (!(e instanceof TypeError)) assert.fail()
-    }
+    assert.throws(() => DeckEncoder.encode(deck), TypeError)
   })
 
   it('should fail over bad base32 inputs', () => {
     const badEncodingNotBase32 = 'I\'m no card code!'
-    try {
-      DeckEncoder.decode(badEncodingNotBase32)
-      assert.fail()
-    } catch (e) {
-      if (!(e instanceof TypeError)) assert.fail()
-    }
+    assert.throws(() => DeckEncoder.decode(badEncodingNotBase32), TypeError)
 
     const badEncoding32 = 'ABCDEFG'
-    try {
-      DeckEncoder.decode(badEncoding32)
-      assert.fail()
-    } catch (e) {
-      if (!(e instanceof TypeError)) assert.fail()
-    }
+    assert.throws(() => DeckEncoder.decode(badEncoding32), TypeError)
 
     const badEncodingEmpty = ''
-    try {
-      DeckEncoder.decode(badEncodingEmpty)
-      assert.fail()
-    } catch (e) {}
+    assert.throws(() => DeckEncoder.decode(badEncodingEmpty), TypeError)
   })
 })
