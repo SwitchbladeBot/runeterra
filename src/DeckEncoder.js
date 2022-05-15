@@ -142,7 +142,7 @@ class DeckEncoder {
   }
 }
 
-DeckEncoder.MAX_KNOWN_VERSION = 4
+DeckEncoder.MAX_KNOWN_VERSION = 5
 DeckEncoder.FORMAT = 1
 DeckEncoder.INITIAL_VERSION = 1
 

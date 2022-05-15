@@ -25,4 +25,8 @@ describe('Faction', () => {
   it('should get correct faction version for BC', () => {
     assert.strictEqual(Faction.getVersion('BC'), 4)
   })
+
+  it('should get correct faction version for RU', () => {
+    assert.strictEqual(Faction.getVersion('RU'), 5)
+  })
 })

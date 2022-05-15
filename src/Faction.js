@@ -45,7 +45,8 @@ Faction.FACTIONS = {
   BW: [6, 2],
   MT: [9, 2],
   SH: [7, 3],
-  BC: [10, 4]
+  BC: [10, 4],
+  RU: [12, 5]
 }
 
 module.exports = Faction

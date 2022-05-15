@@ -435,13 +435,21 @@
       "4:02DE002",
       "5:03BW004"
     ]
-  }
-  ,
+  },
   {
     "code": "CQAQEAIKBIKAAAA",
     "cards": [
       "3:01BC010",
       "3:01BC020"
+    ]
+  },
+  {
+    "code": "CUBAEAIKBIKAEAIMBIKAAAA",
+    "cards": [
+      "3:01BC010",
+      "3:01BC020",
+      "3:01RU010",
+      "3:01RU020"
     ]
   }
 ]
